@@ -2,7 +2,7 @@ import type { Metadata } from 'next';
 import './globals.css';
 
 export const metadata: Metadata = {
-  title: 'Jetour Appointments',
+  title: 'Appointment',
   description: 'Schedule your office visit for vehicle payment and collection',
 };
 

@@ -166,7 +166,7 @@ export default function AdminPage() {
         <div className="max-w-sm w-full bg-white rounded-3xl overflow-hidden shadow-2xl">
           <div className="bg-gradient-to-br from-slate-900 to-blue-900 p-8 text-center">
             <h1 className="text-white text-2xl font-bold">Admin Dashboard</h1>
-            <p className="text-blue-200 text-sm mt-1">Jetour Appointments</p>
+            <p className="text-blue-200 text-sm mt-1">Appointment</p>
           </div>
           <form onSubmit={handleLogin} className="p-6">
             <div className="mb-4">
@@ -199,7 +199,7 @@ export default function AdminPage() {
       {/* Top bar */}
       <div className="bg-slate-900 border-b border-slate-800 sticky top-0 z-10">
         <div className="max-w-4xl mx-auto px-4 py-3 flex items-center justify-between">
-          <h1 className="text-white font-bold text-lg">Jetour Appointments</h1>
+          <h1 className="text-white font-bold text-lg">Appointment</h1>
           <div className="flex items-center gap-3">
             <span className="text-slate-400 text-xs hidden sm:inline">{appointments.filter(a => a.status === 'pending').length} pending</span>
             <button onClick={handleLogout} className="text-slate-400 text-xs hover:text-white transition">

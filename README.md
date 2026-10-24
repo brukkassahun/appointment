@@ -1,4 +1,4 @@
-# Jetour Appointments
+# Appointment
 
 Appointment booking system for car export clients to schedule office visits at the Accra office.
 
