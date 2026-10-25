@@ -2,10 +2,107 @@
 @tailwind components;
 @tailwind utilities;
 
-* {
-  -webkit-tap-highlight-color: transparent;
+html {
+  scroll-behavior: smooth;
 }
 
 body {
-  background: #0f172a;
+  @apply bg-cream text-ink font-sans antialiased;
+  text-rendering: optimizeLegibility;
+}
+
+::selection {
+  @apply bg-ink text-cream;
+}
+
+::-webkit-scrollbar {
+  width: 8px;
+  height: 6px;
+}
+::-webkit-scrollbar-track {
+  @apply bg-cream;
+}
+::-webkit-scrollbar-thumb {
+  @apply bg-line rounded-full;
+}
+::-webkit-scrollbar-thumb:hover {
+  @apply bg-faint;
+}
+
+@layer components {
+  .eyebrow {
+    @apply inline-flex items-center gap-2 rounded-full border border-ink/15 px-4 py-1.5 font-sans text-[11px] font-bold uppercase tracking-[0.22em] text-ink/80;
+  }
+  .eyebrow-dark {
+    @apply inline-flex items-center gap-2 rounded-full border border-white/20 px-4 py-1.5 font-sans text-[11px] font-bold uppercase tracking-[0.22em] text-white/80;
+  }
+  .display-lg {
+    @apply font-display text-3xl font-black uppercase leading-[0.95] tracking-[-0.01em] sm:text-4xl;
+  }
+  .display-md {
+    @apply font-display text-2xl font-black uppercase leading-[1] tracking-[-0.01em] sm:text-3xl;
+  }
+  .title {
+    @apply font-display text-xl font-bold uppercase tracking-[-0.01em];
+  }
+  .btn-primary {
+    @apply relative inline-flex items-center justify-center gap-2 rounded-full bg-ink px-6 py-3 font-sans text-xs font-bold uppercase tracking-[0.18em] text-white transition-all duration-300 hover:bg-ink/85 hover:scale-[1.02] active:scale-[0.98];
+  }
+  .btn-accent {
+    @apply relative inline-flex items-center justify-center gap-2 rounded-full bg-accent px-6 py-3 font-sans text-xs font-bold uppercase tracking-[0.18em] text-white transition-all duration-300 hover:bg-accent-strong hover:scale-[1.02] active:scale-[0.98];
+  }
+  .btn-ghost {
+    @apply inline-flex items-center justify-center gap-2 rounded-full border border-ink/20 px-6 py-3 font-sans text-xs font-bold uppercase tracking-[0.18em] text-ink transition-all duration-300 hover:border-ink hover:bg-ink hover:text-cream;
+  }
+  .btn-danger {
+    @apply inline-flex items-center justify-center gap-2 rounded-full bg-danger px-6 py-3 font-sans text-xs font-bold uppercase tracking-[0.18em] text-white transition-all duration-300 hover:bg-danger/85 active:scale-[0.98];
+  }
+  .input-coda {
+    @apply w-full appearance-none rounded-xl border border-line bg-paper px-4 py-3 font-sans text-sm font-medium text-ink outline-none transition-colors focus:border-ink;
+  }
+  .select-coda {
+    @apply w-full appearance-none rounded-xl border border-line bg-paper px-4 py-3 font-sans text-sm font-medium text-ink outline-none transition-colors focus:border-ink;
+  }
+  .card-coda {
+    @apply overflow-hidden rounded-2xl border border-line bg-paper transition-all duration-300;
+  }
+  .stat-card {
+    @apply rounded-2xl border border-line bg-paper p-5 transition-all duration-300 hover:border-ink/20 hover:shadow-[0_12px_40px_-12px_rgba(0,0,0,0.08)];
+  }
+  .nav-item {
+    @apply flex items-center gap-3 rounded-xl px-4 py-3 font-sans text-sm font-semibold text-white/60 transition-all duration-200 hover:bg-white/5 hover:text-white;
+  }
+  .nav-item-active {
+    @apply bg-accent/15 text-white;
+  }
+  .hairline-t {
+    @apply border-t border-line;
+  }
+  .hairline-b {
+    @apply border-b border-line;
+  }
+  .badge {
+    @apply inline-flex items-center rounded-full px-2.5 py-1 font-sans text-[10px] font-bold uppercase tracking-[0.12em];
+  }
+  .badge-pending {
+    @apply bg-yellow-100 text-yellow-700;
+  }
+  .badge-confirmed {
+    @apply bg-blue-100 text-blue-700;
+  }
+  .badge-completed {
+    @apply bg-green-100 text-green-700;
+  }
+  .badge-cancelled {
+    @apply bg-red-100 text-red-600;
+  }
+  .badge-active {
+    @apply bg-green-100 text-green-700;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .animate-fade-up {
+    animation: none !important;
+  }
 }
