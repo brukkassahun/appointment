@@ -62,6 +62,7 @@ export default function AdminPage() {
   });
   const [createdUrl, setCreatedUrl] = useState('');
   const [creating, setCreating] = useState(false);
+  const [uploading, setUploading] = useState(false);
 
   // Check if already authed on mount
   useEffect(() => {
@@ -138,6 +139,33 @@ export default function AdminPage() {
       }
     } catch {}
     setCreating(false);
+  };
+
+  const handleImageUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    if (!file) return;
+
+    setUploading(true);
+    try {
+      const formData = new FormData();
+      formData.append('file', file);
+      formData.append('prefix', 'appointments');
+
+      const res = await fetch('/api/upload', {
+        method: 'POST',
+        body: formData,
+      });
+
+      if (res.ok) {
+        const data = await res.json();
+        setCreateForm(prev => ({ ...prev, car_image_url: data.url }));
+      } else {
+        alert('Upload failed. Please try again.');
+      }
+    } catch {
+      alert('Upload failed. Please try again.');
+    }
+    setUploading(false);
   };
 
   const copyToClipboard = (text: string) => {
@@ -321,15 +349,42 @@ export default function AdminPage() {
                 </div>
 
                 <div>
-                  <label className="block text-sm font-semibold text-slate-600 mb-1.5">Car Image URL</label>
-                  <input
-                    type="url"
-                    value={createForm.car_image_url}
-                    onChange={e => setCreateForm({...createForm, car_image_url: e.target.value})}
-                    placeholder="https://example.com/car-photo.jpg"
-                    className="w-full px-3.5 py-2.5 border-2 border-slate-200 rounded-lg text-sm bg-slate-50 focus:outline-none focus:border-blue-500 focus:bg-white transition"
-                  />
-                  <p className="text-xs text-slate-400 mt-1">Paste a direct link to the car photo. The client will see this image on their form.</p>
+                  <label className="block text-sm font-semibold text-slate-600 mb-1.5">Car Image</label>
+                  {createForm.car_image_url ? (
+                    <div className="relative">
+                      <img
+                        src={createForm.car_image_url}
+                        alt="Car preview"
+                        className="w-full h-48 object-cover rounded-xl border-2 border-slate-200"
+                      />
+                      <button
+                        type="button"
+                        onClick={() => setCreateForm({ ...createForm, car_image_url: '' })}
+                        className="absolute top-2 right-2 bg-red-500 text-white rounded-full w-7 h-7 flex items-center justify-center text-sm font-bold shadow-lg"
+                      >
+                        x
+                      </button>
+                    </div>
+                  ) : (
+                    <label className="flex flex-col items-center justify-center w-full h-32 border-2 border-dashed border-slate-300 rounded-xl cursor-pointer bg-slate-50 hover:bg-slate-100 transition">
+                      {uploading ? (
+                        <span className="text-sm text-slate-500">Uploading...</span>
+                      ) : (
+                        <>
+                          <svg className="w-8 h-8 text-slate-400 mb-2" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z" /></svg>
+                          <span className="text-sm text-slate-500">Tap to upload car photo</span>
+                          <span className="text-xs text-slate-400 mt-0.5">JPG, PNG, WebP (max 10MB)</span>
+                        </>
+                      )}
+                      <input
+                        type="file"
+                        accept="image/*"
+                        onChange={handleImageUpload}
+                        disabled={uploading}
+                        className="hidden"
+                      />
+                    </label>
+                  )}
                 </div>
 
                 <div>
