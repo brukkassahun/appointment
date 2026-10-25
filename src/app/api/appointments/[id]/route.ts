@@ -26,3 +26,25 @@ export async function PATCH(
 
   return NextResponse.json({ appointment: data });
 }
+
+// DELETE: Delete an appointment (admin only)
+export async function DELETE(
+  request: NextRequest,
+  { params }: { params: { id: string } }
+) {
+  const session = request.cookies.get('admin_session');
+  if (session?.value !== 'authenticated') {
+    return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
+  }
+
+  const { error } = await supabaseAdmin
+    .from('appointments')
+    .delete()
+    .eq('id', params.id);
+
+  if (error) {
+    return NextResponse.json({ error: error.message }, { status: 500 });
+  }
+
+  return NextResponse.json({ success: true });
+}

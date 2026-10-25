@@ -35,6 +35,7 @@ interface Appointment {
     car_model: string;
     car_year: number;
     car_price: string;
+    car_image_url: string | null;
   } | null;
 }
 
@@ -63,6 +64,7 @@ export default function AdminPage() {
   const [createdUrl, setCreatedUrl] = useState('');
   const [creating, setCreating] = useState(false);
   const [uploading, setUploading] = useState(false);
+  const [uploadError, setUploadError] = useState('');
 
   // Check if already authed on mount
   useEffect(() => {
@@ -135,7 +137,7 @@ export default function AdminPage() {
           car_make: '', car_model: '', car_year: '',
           car_price: '', car_image_url: '', client_ref: '',
         });
-        loadData(); // Refresh list
+        loadData();
       }
     } catch {}
     setCreating(false);
@@ -146,6 +148,7 @@ export default function AdminPage() {
     if (!file) return;
 
     setUploading(true);
+    setUploadError('');
     try {
       const formData = new FormData();
       formData.append('file', file);
@@ -161,12 +164,14 @@ export default function AdminPage() {
         setCreateForm(prev => ({ ...prev, car_image_url: data.url }));
       } else {
         const err = await res.json().catch(() => ({}));
-        alert(err.error || 'Upload failed. Make sure BLOB_READ_WRITE_TOKEN is set in Vercel.');
+        setUploadError(err.error || 'Upload failed. Make sure BLOB_READ_WRITE_TOKEN is set in Vercel.');
       }
     } catch {
-      alert('Upload failed. Please check your connection and try again.');
+      setUploadError('Upload failed. Please check your connection.');
     }
     setUploading(false);
+    // Reset the file input so the same file can be selected again
+    e.target.value = '';
   };
 
   const copyToClipboard = (text: string) => {
@@ -180,6 +185,18 @@ export default function AdminPage() {
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({ status }),
     });
+    loadData();
+  };
+
+  const deleteAppointment = async (id: string) => {
+    if (!confirm('Delete this appointment permanently?')) return;
+    await fetch(`/api/appointments/${id}`, { method: 'DELETE' });
+    loadData();
+  };
+
+  const deleteBooking = async (slug: string) => {
+    if (!confirm('Delete this booking? All related appointments will also be deleted.')) return;
+    await fetch(`/api/bookings/${slug}`, { method: 'DELETE' });
     loadData();
   };
 
@@ -349,6 +366,7 @@ export default function AdminPage() {
                   </div>
                 </div>
 
+                {/* ===== IMAGE UPLOAD WITH PREVIEW + CHANGE BUTTON ===== */}
                 <div>
                   <label className="block text-sm font-semibold text-slate-600 mb-1.5">Car Image</label>
                   {createForm.car_image_url ? (
@@ -357,34 +375,61 @@ export default function AdminPage() {
                         src={createForm.car_image_url}
                         alt="Car preview"
                         className="w-full h-48 object-cover rounded-xl border-2 border-slate-200"
+                        onError={(e) => {
+                          e.currentTarget.style.display = 'none';
+                          e.currentTarget.parentElement!.querySelector('.img-fallback')!.setAttribute('style', 'display:flex');
+                        }}
                       />
-                      <button
-                        type="button"
-                        onClick={() => setCreateForm({ ...createForm, car_image_url: '' })}
-                        className="absolute top-2 right-2 bg-red-500 text-white rounded-full w-7 h-7 flex items-center justify-center text-sm font-bold shadow-lg"
-                      >
-                        x
-                      </button>
+                      <div className="img-fallback hidden w-full h-48 items-center justify-center bg-slate-100 rounded-xl border-2 border-slate-200 text-slate-400 text-sm">
+                        Image could not load
+                      </div>
+                      {/* Change + Remove buttons */}
+                      <div className="flex gap-2 mt-2">
+                        <label className="flex-1 py-2 bg-blue-50 text-blue-600 rounded-lg text-xs font-semibold text-center cursor-pointer hover:bg-blue-100 transition flex items-center justify-center gap-1.5">
+                          <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z" /></svg>
+                          Change Photo
+                          <input
+                            type="file"
+                            accept="image/*"
+                            onChange={handleImageUpload}
+                            disabled={uploading}
+                            className="hidden"
+                          />
+                        </label>
+                        <button
+                          type="button"
+                          onClick={() => setCreateForm({ ...createForm, car_image_url: '' })}
+                          className="px-4 py-2 bg-red-50 text-red-600 rounded-lg text-xs font-semibold hover:bg-red-100 transition"
+                        >
+                          Remove
+                        </button>
+                      </div>
                     </div>
                   ) : (
-                    <label className="flex flex-col items-center justify-center w-full h-32 border-2 border-dashed border-slate-300 rounded-xl cursor-pointer bg-slate-50 hover:bg-slate-100 transition">
-                      {uploading ? (
-                        <span className="text-sm text-slate-500">Uploading...</span>
-                      ) : (
-                        <>
-                          <svg className="w-8 h-8 text-slate-400 mb-2" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z" /></svg>
-                          <span className="text-sm text-slate-500">Tap to upload car photo</span>
-                          <span className="text-xs text-slate-400 mt-0.5">JPG, PNG, WebP (max 10MB)</span>
-                        </>
-                      )}
-                      <input
-                        type="file"
-                        accept="image/*"
-                        onChange={handleImageUpload}
-                        disabled={uploading}
-                        className="hidden"
-                      />
-                    </label>
+                    <div>
+                      <label className="flex flex-col items-center justify-center w-full h-32 border-2 border-dashed border-slate-300 rounded-xl cursor-pointer bg-slate-50 hover:bg-slate-100 transition">
+                        {uploading ? (
+                          <div className="flex flex-col items-center">
+                            <div className="w-6 h-6 border-2 border-blue-500 border-t-transparent rounded-full animate-spin mb-2"></div>
+                            <span className="text-sm text-slate-500">Uploading...</span>
+                          </div>
+                        ) : (
+                          <>
+                            <svg className="w-8 h-8 text-slate-400 mb-2" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z" /></svg>
+                            <span className="text-sm text-slate-500">Tap to upload car photo</span>
+                            <span className="text-xs text-slate-400 mt-0.5">JPG, PNG, WebP (max 10MB)</span>
+                          </>
+                        )}
+                        <input
+                          type="file"
+                          accept="image/*"
+                          onChange={handleImageUpload}
+                          disabled={uploading}
+                          className="hidden"
+                        />
+                      </label>
+                      {uploadError && <p className="text-red-500 text-xs mt-2">{uploadError}</p>}
+                    </div>
                   )}
                 </div>
 
@@ -412,7 +457,7 @@ export default function AdminPage() {
           </div>
         )}
 
-        {/* ===== APPOINTMENTS TAB ===== */}
+        {/* ===== APPOINTMENTS TAB (WITH IMAGE + DELETE) ===== */}
         {tab === 'appointments' && (
           <div>
             {loading ? (
@@ -426,21 +471,33 @@ export default function AdminPage() {
               <div className="space-y-3">
                 {appointments.map(apt => (
                   <div key={apt.id} className="bg-white rounded-2xl p-5 shadow-lg">
-                    <div className="flex items-start justify-between mb-3">
-                      <div>
-                        <h3 className="font-bold text-slate-800 text-base">{apt.client_name}</h3>
-                        <p className="text-slate-500 text-xs">
-                          {apt.bookings ? `${apt.bookings.car_make} ${apt.bookings.car_model} ${apt.bookings.car_year} - ${apt.bookings.car_price}` : 'Vehicle info unavailable'}
-                        </p>
+                    {/* Car image + client info */}
+                    <div className="flex gap-3 mb-3">
+                      {apt.bookings?.car_image_url && (
+                        <img
+                          src={apt.bookings.car_image_url}
+                          alt={`${apt.bookings.car_make} ${apt.bookings.car_model}`}
+                          className="w-20 h-20 rounded-lg object-cover flex-shrink-0 border border-slate-200"
+                        />
+                      )}
+                      <div className="flex-1 min-w-0">
+                        <div className="flex items-start justify-between">
+                          <div>
+                            <h3 className="font-bold text-slate-800 text-base">{apt.client_name}</h3>
+                            <p className="text-slate-500 text-xs">
+                              {apt.bookings ? `${apt.bookings.car_make} ${apt.bookings.car_model} ${apt.bookings.car_year} - ${apt.bookings.car_price}` : 'Vehicle info unavailable'}
+                            </p>
+                          </div>
+                          <span className={`text-[10px] font-bold px-2 py-1 rounded-full whitespace-nowrap ${
+                            apt.status === 'pending' ? 'bg-yellow-100 text-yellow-700' :
+                            apt.status === 'confirmed' ? 'bg-blue-100 text-blue-700' :
+                            apt.status === 'completed' ? 'bg-green-100 text-green-700' :
+                            'bg-red-100 text-red-700'
+                          }`}>
+                            {apt.status.toUpperCase()}
+                          </span>
+                        </div>
                       </div>
-                      <span className={`text-[10px] font-bold px-2 py-1 rounded-full ${
-                        apt.status === 'pending' ? 'bg-yellow-100 text-yellow-700' :
-                        apt.status === 'confirmed' ? 'bg-blue-100 text-blue-700' :
-                        apt.status === 'completed' ? 'bg-green-100 text-green-700' :
-                        'bg-red-100 text-red-700'
-                      }`}>
-                        {apt.status.toUpperCase()}
-                      </span>
                     </div>
 
                     <div className="grid grid-cols-2 gap-2 text-xs mb-3">
@@ -487,6 +544,12 @@ export default function AdminPage() {
                             Cancel
                           </button>
                         )}
+                        <button
+                          onClick={() => deleteAppointment(apt.id)}
+                          className="px-3 py-1.5 bg-slate-100 text-slate-500 rounded-lg text-xs font-semibold hover:bg-slate-200 transition"
+                        >
+                          Delete
+                        </button>
                       </div>
                     </div>
                   </div>
@@ -496,7 +559,7 @@ export default function AdminPage() {
           </div>
         )}
 
-        {/* ===== BOOKINGS TAB ===== */}
+        {/* ===== BOOKINGS TAB (WITH IMAGE + DELETE) ===== */}
         {tab === 'bookings' && (
           <div>
             {loading ? (
@@ -510,26 +573,43 @@ export default function AdminPage() {
               <div className="space-y-3">
                 {bookings.map(b => (
                   <div key={b.id} className="bg-white rounded-2xl p-4 shadow-lg">
-                    <div className="flex items-start justify-between gap-3">
+                    {/* Car image + details */}
+                    <div className="flex gap-3">
+                      {b.car_image_url ? (
+                        <img
+                          src={b.car_image_url}
+                          alt={`${b.car_make} ${b.car_model}`}
+                          className="w-24 h-24 rounded-lg object-cover flex-shrink-0 border border-slate-200"
+                        />
+                      ) : (
+                        <div className="w-24 h-24 rounded-lg bg-slate-100 flex items-center justify-center flex-shrink-0 border border-slate-200">
+                          <span className="text-slate-300 text-xs">No image</span>
+                        </div>
+                      )}
                       <div className="flex-1 min-w-0">
-                        <h3 className="font-bold text-slate-800 text-sm">
-                          {b.car_make} {b.car_model} {b.car_year}
-                        </h3>
-                        <p className="text-blue-600 font-semibold text-sm">{b.car_price}</p>
-                        {b.client_ref && (
-                          <p className="text-slate-400 text-xs mt-0.5">{b.client_ref}</p>
-                        )}
-                        <p className="text-slate-400 text-[10px] mt-1">
-                          Created: {new Date(b.created_at).toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' })}
-                        </p>
+                        <div className="flex items-start justify-between gap-2">
+                          <div>
+                            <h3 className="font-bold text-slate-800 text-sm">
+                              {b.car_make} {b.car_model} {b.car_year}
+                            </h3>
+                            <p className="text-blue-600 font-semibold text-sm">{b.car_price}</p>
+                            {b.client_ref && (
+                              <p className="text-slate-400 text-xs mt-0.5">{b.client_ref}</p>
+                            )}
+                            <p className="text-slate-400 text-[10px] mt-1">
+                              Created: {new Date(b.created_at).toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' })}
+                            </p>
+                          </div>
+                          <span className={`text-[10px] font-bold px-2 py-1 rounded-full whitespace-nowrap ${
+                            b.status === 'active' ? 'bg-green-100 text-green-700' : 'bg-slate-100 text-slate-500'
+                          }`}>
+                            {b.status.toUpperCase()}
+                          </span>
+                        </div>
                       </div>
-                      <span className={`text-[10px] font-bold px-2 py-1 rounded-full whitespace-nowrap ${
-                        b.status === 'active' ? 'bg-green-100 text-green-700' : 'bg-slate-100 text-slate-500'
-                      }`}>
-                        {b.status.toUpperCase()}
-                      </span>
                     </div>
 
+                    {/* Copy link + delete */}
                     <div className="flex items-center gap-2 mt-3">
                       <input
                         type="text"
@@ -542,6 +622,12 @@ export default function AdminPage() {
                         className="px-3 py-2 bg-blue-600 text-white rounded-lg text-xs font-semibold whitespace-nowrap"
                       >
                         Copy
+                      </button>
+                      <button
+                        onClick={() => deleteBooking(b.slug)}
+                        className="px-3 py-2 bg-red-50 text-red-600 rounded-lg text-xs font-semibold hover:bg-red-100 transition"
+                      >
+                        Delete
                       </button>
                     </div>
                   </div>

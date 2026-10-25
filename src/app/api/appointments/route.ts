@@ -16,7 +16,8 @@ export async function GET(request: NextRequest) {
         car_make,
         car_model,
         car_year,
-        car_price
+        car_price,
+        car_image_url
       )
     `)
     .order('created_at', { ascending: false });
