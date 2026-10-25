@@ -1,6 +1,6 @@
 export const config = {
   // Accra office WhatsApp (international format, no +)
-  officeWhatsApp: process.env.OFFICE_WHATSAPP || '2335546589852',
+  officeWhatsApp: process.env.OFFICE_WHATSAPP || '8618205215533',
   officeName: 'Accra Office',
   officeAddress: 'Adenta-Accra, Ghana',
   officeHours: 'Monday - Saturday, 9:00 AM - 5:00 PM',
