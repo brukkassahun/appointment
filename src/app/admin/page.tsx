@@ -160,10 +160,11 @@ export default function AdminPage() {
         const data = await res.json();
         setCreateForm(prev => ({ ...prev, car_image_url: data.url }));
       } else {
-        alert('Upload failed. Please try again.');
+        const err = await res.json().catch(() => ({}));
+        alert(err.error || 'Upload failed. Make sure BLOB_READ_WRITE_TOKEN is set in Vercel.');
       }
     } catch {
-      alert('Upload failed. Please try again.');
+      alert('Upload failed. Please check your connection and try again.');
     }
     setUploading(false);
   };

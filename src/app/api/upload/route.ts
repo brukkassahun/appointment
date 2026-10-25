@@ -1,8 +1,18 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { put } from '@vercel/blob';
 
+export const runtime = 'edge';
+
 export async function POST(req: NextRequest) {
   try {
+    const token = process.env.BLOB_READ_WRITE_TOKEN;
+    if (!token) {
+      return NextResponse.json(
+        { error: 'Blob storage not configured. Add BLOB_READ_WRITE_TOKEN in Vercel env vars.' },
+        { status: 500 }
+      );
+    }
+
     const form = await req.formData();
     const file = form.get('file') as File | null;
     const prefix = (form.get('prefix') as string) || 'appointments';
@@ -30,14 +40,13 @@ export async function POST(req: NextRequest) {
     const blob = await put(pathname, file, {
       access: 'public',
       addRandomSuffix: false,
+      token,
     });
 
     return NextResponse.json({ url: blob.url, pathname: blob.pathname });
   } catch (err) {
-    console.error('Upload error:', err);
-    return NextResponse.json(
-      { error: err instanceof Error ? err.message : 'Upload failed' },
-      { status: 500 }
-    );
+    const message = err instanceof Error ? err.message : 'Upload failed';
+    console.error('Upload error:', message);
+    return NextResponse.json({ error: message }, { status: 500 });
   }
 }

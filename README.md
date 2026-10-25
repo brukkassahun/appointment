@@ -59,9 +59,9 @@ Visit `http://localhost:3000/admin` to access the dashboard.
 ### 5. Custom Subdomain
 
 In Vercel Project Settings > Domains:
-- Add `book.jetourkits.com`
+- Add `appointment.jetourkits.com`
 - Add the DNS record shown by Vercel to your domain registrar
-- Update `NEXT_PUBLIC_BASE_URL` to `https://book.jetourkits.com`
+- Update `NEXT_PUBLIC_BASE_URL` to `https://appointment.jetourkits.com`
 
 ## Project Structure
 
@@ -93,7 +93,7 @@ Admin Dashboard (/admin)
         |
         | Create booking with car details
         v
-  Generate unique link: book.jetourkits.com/b/abc123
+  Generate unique link: appointment.jetourkits.com/b/abc123
         |
         | Send link to client on WhatsApp
         v
