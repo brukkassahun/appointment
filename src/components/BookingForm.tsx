@@ -222,8 +222,6 @@ export default function BookingForm({ booking }: { booking: Booking }) {
                   <option value="Payment only">Payment only</option>
                   <option value="Payment + Document Signing">Payment + Document Signing</option>
                   <option value="Document Signing only">Document Signing only</option>
-                  <option value="Vehicle Inspection before Payment">Vehicle Inspection before Payment</option>
-                  <option value="Full Vehicle Pickup">Full Vehicle Pickup (Payment + Documents + Collection)</option>
                   <option value="Other">Other (specify in notes)</option>
                 </select>
               </div>
