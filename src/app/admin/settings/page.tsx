@@ -25,7 +25,7 @@ export default function SettingsPage() {
             </div>
             <div>
               <p className="font-sans text-sm font-bold text-ink">{config.officeName}</p>
-              <p className="text-sm text-muted">Accra, Ghana</p>
+              <p className="text-sm text-muted">{config.officeAgent} · {config.officeAgentRole}</p>
             </div>
           </div>
 
@@ -35,7 +35,9 @@ export default function SettingsPage() {
             </div>
             <div>
               <p className="font-sans text-sm font-bold text-ink">Address</p>
-              <p className="text-sm text-muted">{config.officeAddress}</p>
+              <a href={config.officeMapsUrl} target="_blank" rel="noopener noreferrer" className="text-sm text-accent underline-offset-2 hover:underline">
+                View on Google Maps
+              </a>
             </div>
           </div>
 
@@ -51,11 +53,11 @@ export default function SettingsPage() {
 
           <div className="flex items-start gap-4">
             <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-card flex-shrink-0">
-              <MessageCircle className="h-5 w-5 text-ink" strokeWidth={1.5} />
+              <Phone className="h-5 w-5 text-ink" strokeWidth={1.5} />
             </div>
             <div>
-              <p className="font-sans text-sm font-bold text-ink">WhatsApp (Confirmation)</p>
-              <p className="text-sm text-muted">+{config.officeWhatsApp}</p>
+              <p className="font-sans text-sm font-bold text-ink">Phone / WhatsApp</p>
+              <p className="text-sm text-muted">{config.officePhoneDisplay}</p>
               <p className="mt-1 text-xs text-faint">Appointment confirmations are sent to this number.</p>
             </div>
           </div>

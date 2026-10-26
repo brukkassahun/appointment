@@ -213,22 +213,37 @@ export default function BookingForm({ booking }: { booking: Booking }) {
           <div className="relative h-40 overflow-hidden">
             <img
               src="https://images.unsplash.com/photo-1568605114967-8130f3a36894?w=800&h=400&fit=crop"
-              alt="Our Accra office"
+              alt="MUSTDONE AUTO GHANA office"
               className="h-full w-full object-cover"
             />
             <div className="absolute inset-0 bg-gradient-to-t from-black/70 to-transparent" />
             <div className="absolute bottom-0 left-0 right-0 p-4">
               <p className="font-display text-lg font-black uppercase tracking-[-0.01em] text-white">{config.officeName}</p>
-              <p className="text-xs text-white/80">{config.officeAddress}</p>
+              <a href={config.officeMapsUrl} target="_blank" rel="noopener noreferrer" className="inline-flex items-center gap-1 text-xs text-white/80 underline-offset-2 hover:underline">
+                <MapPin className="h-3 w-3" strokeWidth={2} /> View on Google Maps
+              </a>
             </div>
           </div>
-          <div className="flex items-center gap-4 p-4">
-            <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-card flex-shrink-0">
-              <Clock className="h-5 w-5 text-ink" strokeWidth={1.5} />
+          <div className="space-y-3 p-4">
+            {/* Agent */}
+            <div className="flex items-center gap-4">
+              <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-accent/10 flex-shrink-0">
+                <ShieldCheck className="h-5 w-5 text-accent" strokeWidth={1.5} />
+              </div>
+              <div>
+                <p className="font-sans text-sm font-bold text-ink">{config.officeAgent}</p>
+                <p className="text-xs text-muted">{config.officeAgentRole}</p>
+              </div>
             </div>
-            <div>
-              <p className="font-sans text-sm font-bold text-ink">{config.officeHours}</p>
-              <p className="text-xs text-muted">Walk-ins welcome, but appointments get priority service</p>
+            {/* Hours + Phone */}
+            <div className="flex items-center gap-4 border-t border-line pt-3">
+              <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-card flex-shrink-0">
+                <Clock className="h-5 w-5 text-ink" strokeWidth={1.5} />
+              </div>
+              <div>
+                <p className="font-sans text-sm font-bold text-ink">{config.officeHours}</p>
+                <p className="text-xs text-muted">{config.officePhoneDisplay} · Walk-ins welcome, appointments get priority</p>
+              </div>
             </div>
           </div>
         </div>
