@@ -4,7 +4,7 @@ import { useState } from 'react';
 import { config } from '@/lib/config';
 import {
   CalendarDays, Clock, MapPin, Check, Car, ChevronRight,
-  ShieldCheck, Ship, FileCheck, Sparkles, Phone,
+  ShieldCheck, FileCheck, Sparkles, Phone,
 } from 'lucide-react';
 
 interface Booking {
@@ -24,9 +24,9 @@ const TIME_SLOTS = [
 ];
 
 const HOOK_POINTS = [
-  { icon: ShieldCheck, title: 'Pre-Export Inspected', desc: 'Vehicle passed full quality check before shipping from China' },
-  { icon: FileCheck, title: 'Documents Ready', desc: 'Title, bill of lading, and export docs prepared for your collection' },
-  { icon: Ship, title: 'Arrived in Ghana', desc: 'Your vehicle has cleared Tema port and is at our Accra office' },
+  { icon: ShieldCheck, title: 'Vehicle Ready', desc: 'Your car is at our Accra office, inspected and ready for collection' },
+  { icon: FileCheck, title: 'Documents Prepared', desc: 'Ownership transfer and registration documents ready for signing' },
+  { icon: Car, title: 'Drive Home Today', desc: 'Complete your payment at the office and drive your car home same day' },
 ];
 
 export default function BookingForm({ booking }: { booking: Booking }) {
@@ -116,7 +116,7 @@ export default function BookingForm({ booking }: { booking: Booking }) {
                 <li>1. Send the WhatsApp message to our office</li>
                 <li>2. Our office confirms your appointment</li>
                 <li>3. Visit the office on your selected date</li>
-                <li>4. Complete payment and drive your car home</li>
+                <li>4. Complete payment and collect your car</li>
               </ol>
             </div>
           </div>
@@ -149,8 +149,7 @@ export default function BookingForm({ booking }: { booking: Booking }) {
             Welcome, Your<br /><span className="text-accent">Jetour</span> Is Ready
           </h1>
           <p className="mx-auto mt-4 max-w-md text-sm leading-relaxed text-muted">
-            Your vehicle has arrived from China, passed inspection, and is waiting at our Accra office.
-            Book your visit to complete payment and drive your car home.
+            Your car is at our Accra office and ready for collection. Book your visit to complete payment and drive home.
           </p>
         </div>
 
