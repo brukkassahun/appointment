@@ -146,7 +146,7 @@ export default function BookingForm({ booking }: { booking: Booking }) {
           </div>
           <p className="eyebrow">Your Car Awaits You</p>
           <h1 className="display-lg mt-4 text-ink">
-            Welcome, Your<br /><span className="text-accent">Jetour</span> Is Ready
+            Your {booking.car_make} {booking.car_model}<br /><span className="text-accent">{booking.car_year}</span> Is Ready
           </h1>
           <p className="mx-auto mt-4 max-w-md text-sm leading-relaxed text-muted">
             Your car is at our Accra office and ready for collection. Book your visit to complete payment and drive home.
@@ -208,25 +208,27 @@ export default function BookingForm({ booking }: { booking: Booking }) {
           })}
         </div>
 
-        {/* Office Info with Image */}
+        {/* Office Info with Map */}
         <div className="card-coda mb-6 overflow-hidden">
-          <div className="relative h-40 overflow-hidden">
-            <img
-              src="https://images.unsplash.com/photo-1568605114967-8130f3a36894?w=800&h=400&fit=crop"
-              alt="MUSTDONE AUTO GHANA office"
-              className="h-full w-full object-cover"
+          <div className="relative h-56 overflow-hidden bg-asphalt-light">
+            <iframe
+              src={config.officeMapsEmbed}
+              className="h-full w-full border-0"
+              loading="lazy"
+              referrerPolicy="no-referrer-when-downgrade"
+              title="MUSTDONE AUTO GHANA location"
             />
-            <div className="absolute inset-0 bg-gradient-to-t from-black/70 to-transparent" />
-            <div className="absolute bottom-0 left-0 right-0 p-4">
-              <p className="font-display text-lg font-black uppercase tracking-[-0.01em] text-white">{config.officeName}</p>
-              <a href={config.officeMapsUrl} target="_blank" rel="noopener noreferrer" className="inline-flex items-center gap-1 text-xs text-white/80 underline-offset-2 hover:underline">
-                <MapPin className="h-3 w-3" strokeWidth={2} /> View on Google Maps
-              </a>
-            </div>
           </div>
           <div className="space-y-3 p-4">
+            {/* Office name + maps link */}
+            <div className="flex items-center justify-between">
+              <p className="font-display text-base font-black uppercase tracking-[-0.01em] text-ink">{config.officeName}</p>
+              <a href={config.officeMapsUrl} target="_blank" rel="noopener noreferrer" className="inline-flex items-center gap-1 text-xs text-accent underline-offset-2 hover:underline">
+                <MapPin className="h-3 w-3" strokeWidth={2} /> Open in Maps
+              </a>
+            </div>
             {/* Agent */}
-            <div className="flex items-center gap-4">
+            <div className="flex items-center gap-4 border-t border-line pt-3">
               <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-accent/10 flex-shrink-0">
                 <ShieldCheck className="h-5 w-5 text-accent" strokeWidth={1.5} />
               </div>

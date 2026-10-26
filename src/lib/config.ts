@@ -1,9 +1,11 @@
 export const config = {
-  // Accra office WhatsApp (international format, no +)
-  officeWhatsApp: process.env.OFFICE_WHATSAPP || '233535198356',
+  // WhatsApp for appointment confirmations (Bk's China number)
+  officeWhatsApp: process.env.OFFICE_WHATSAPP || '8618205215533',
+  // Accra office details (display only — not for WhatsApp confirmations)
   officeName: 'MUSTDONE AUTO GHANA',
   officeAddress: 'Accra, Ghana',
   officeMapsUrl: 'https://maps.app.goo.gl/6nqhCcgoFV96NvHi9?g_st=iwb',
+  officeMapsEmbed: 'https://www.google.com/maps?q=MUSTDONE+AUTO+GHANA+Accra+Ghana&output=embed',
   officeHours: 'Monday - Saturday, 9:00 AM - 5:00 PM',
   officeAgent: 'Michael Benguy',
   officeAgentRole: 'Accountant — Shipping / Clearing / Tema Port Handling',
