@@ -23,6 +23,13 @@ const TIME_SLOTS = [
   { val: '3:00 PM - 5:00 PM', label: 'Afternoon', sub: '3PM - 5PM' },
 ];
 
+/** Format price with USD dollar sign if not already prefixed. */
+function formatUsd(price: string): string {
+  if (!price) return '';
+  if (price.startsWith('$')) return price;
+  return `$${price}`;
+}
+
 export default function BookingForm({ booking }: { booking: Booking }) {
   const [submitted, setSubmitted] = useState(false);
   const [submitting, setSubmitting] = useState(false);
@@ -67,7 +74,7 @@ export default function BookingForm({ booking }: { booking: Booking }) {
       if (form.client_email) msg += `Email: ${form.client_email}\n`;
       msg += '\n*Vehicle*\n';
       msg += `Vehicle: ${booking.car_make} ${booking.car_model} ${booking.car_year}\n`;
-      msg += `Agreed Price: ${booking.car_price}\n`;
+      msg += `Agreed Price: ${formatUsd(booking.car_price)}\n`;
       msg += '\n*Appointment*\n';
       msg += `Purpose: ${form.purpose}\n`;
       msg += `Date: ${formattedDate}\n`;
@@ -167,7 +174,7 @@ export default function BookingForm({ booking }: { booking: Booking }) {
               </div>
               <div className="flex items-center justify-between">
                 <span className="text-sm text-muted">Agreed Price</span>
-                <span className="font-sans text-lg font-black text-accent">{booking.car_price}</span>
+                <span className="font-sans text-lg font-black text-accent">{formatUsd(booking.car_price)}</span>
               </div>
               <div className="flex items-center justify-between border-t border-line pt-2">
                 <span className="text-sm text-muted">Import Duty (est.)</span>

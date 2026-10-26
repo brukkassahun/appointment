@@ -129,10 +129,10 @@ export default function CreateBookingPage() {
                 placeholder="e.g. 2023" className="input-coda" />
             </div>
             <div>
-              <label className="mb-2 block font-sans text-sm font-semibold text-ink">Agreed Price *</label>
+              <label className="mb-2 block font-sans text-sm font-semibold text-ink">Agreed Price (USD) *</label>
               <input type="text" required value={form.car_price}
                 onChange={e => setForm({...form, car_price: e.target.value})}
-                placeholder="e.g. $12,500" className="input-coda" />
+                placeholder="e.g. 12,500" className="input-coda" />
             </div>
           </div>
         </div>

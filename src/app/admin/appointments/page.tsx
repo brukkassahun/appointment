@@ -143,7 +143,7 @@ function AppointmentCard({ apt, onUpdate, onDelete }: {
             <div className="min-w-0">
               <p className="truncate font-sans text-base font-bold text-ink">{apt.client_name}</p>
               <p className="truncate text-sm text-muted">
-                {apt.bookings ? `${apt.bookings.car_make} ${apt.bookings.car_model} ${apt.bookings.car_year} · ${apt.bookings.car_price}` : 'Vehicle unavailable'}
+                {apt.bookings ? `${apt.bookings.car_make} ${apt.bookings.car_model} ${apt.bookings.car_year} · ${apt.bookings.car_price.startsWith('$') ? apt.bookings.car_price : `$${apt.bookings.car_price}`}` : 'Vehicle unavailable'}
               </p>
             </div>
             <span className={`badge ${statusClass} flex-shrink-0`}>{apt.status}</span>

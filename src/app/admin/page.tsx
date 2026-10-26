@@ -161,7 +161,7 @@ function BookingCard({ booking }: { booking: Booking }) {
         <p className="font-sans text-sm font-bold text-ink">
           {booking.car_make} {booking.car_model} {booking.car_year}
         </p>
-        <p className="mt-1 font-sans text-sm font-bold text-accent">{booking.car_price}</p>
+        <p className="mt-1 font-sans text-sm font-bold text-accent">{booking.car_price.startsWith('$') ? booking.car_price : `$${booking.car_price}`}</p>
         {booking.client_ref && (
           <p className="mt-1 truncate text-xs text-muted">{booking.client_ref}</p>
         )}
