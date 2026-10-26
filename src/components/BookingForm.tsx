@@ -3,8 +3,8 @@
 import { useState } from 'react';
 import { config } from '@/lib/config';
 import {
-  CalendarDays, Clock, MapPin, Check, Car, ChevronRight,
-  ShieldCheck, FileCheck, Sparkles, Phone,
+  CalendarDays, Clock, MapPin, Check, ChevronRight,
+  ShieldCheck, Sparkles, Phone,
 } from 'lucide-react';
 
 interface Booking {
@@ -21,12 +21,6 @@ const TIME_SLOTS = [
   { val: '9:00 AM - 12:00 PM', label: 'Morning', sub: '9AM - 12PM' },
   { val: '12:00 PM - 3:00 PM', label: 'Midday', sub: '12PM - 3PM' },
   { val: '3:00 PM - 5:00 PM', label: 'Afternoon', sub: '3PM - 5PM' },
-];
-
-const HOOK_POINTS = [
-  { icon: ShieldCheck, title: 'Vehicle Ready', desc: 'Your car is at our Accra office, inspected and ready for collection' },
-  { icon: FileCheck, title: 'Documents Prepared', desc: 'Ownership transfer and registration documents ready for signing' },
-  { icon: Car, title: 'Drive Home Today', desc: 'Complete your payment at the office and drive your car home same day' },
 ];
 
 export default function BookingForm({ booking }: { booking: Booking }) {
@@ -115,8 +109,8 @@ export default function BookingForm({ booking }: { booking: Booking }) {
               <ol className="mt-2 space-y-1.5 text-xs text-muted">
                 <li>1. Send the WhatsApp message to our office</li>
                 <li>2. Our office confirms your appointment</li>
-                <li>3. Visit the office on your selected date</li>
-                <li>4. Complete payment and collect your car</li>
+                <li>3. Visit the office to complete payment</li>
+                <li>4. We ship your car from China to Tema Port</li>
               </ol>
             </div>
           </div>
@@ -149,7 +143,7 @@ export default function BookingForm({ booking }: { booking: Booking }) {
             Your {booking.car_make} {booking.car_model}<br /><span className="text-accent">{booking.car_year}</span> Is Ready
           </h1>
           <p className="mx-auto mt-4 max-w-md text-sm leading-relaxed text-muted">
-            Your car is at our Accra office and ready for collection. Book your visit to complete payment and drive home.
+            Complete the payment and we will ship your car from China to Ghana. Your future car is one step away.
           </p>
         </div>
 
@@ -160,7 +154,7 @@ export default function BookingForm({ booking }: { booking: Booking }) {
               <img src={booking.car_image_url} alt={`${booking.car_make} ${booking.car_model}`} className="h-full w-full object-cover" />
               <div className="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent" />
               <div className="absolute bottom-0 left-0 right-0 p-4">
-                <span className="badge bg-accent text-white">Ready for Collection</span>
+                <span className="badge bg-accent text-white">Ready to Ship</span>
               </div>
             </div>
           )}
@@ -191,21 +185,78 @@ export default function BookingForm({ booking }: { booking: Booking }) {
         </div>
 
         {/* Hook Points — why book now */}
-        <div className="mb-6 space-y-3">
-          {HOOK_POINTS.map((point, i) => {
-            const Icon = point.icon;
-            return (
-              <div key={i} className="flex items-center gap-4 rounded-2xl border border-line bg-paper p-4">
-                <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-accent/10 flex-shrink-0">
-                  <Icon className="h-5 w-5 text-accent" strokeWidth={1.5} />
+        {/* Process Timeline: China to Ghana */}
+        <div className="card-coda mb-6 overflow-hidden p-5 sm:p-6">
+          <p className="eyebrow mb-4">From China To Your Driveway</p>
+          <h2 className="font-display text-lg font-black uppercase tracking-[-0.01em] text-ink mb-1">The Process</h2>
+          <p className="text-xs text-muted mb-5">What happens after you complete your payment</p>
+
+          {/* Step 1 */}
+          <div className="relative flex gap-4 pb-6">
+            <div className="flex flex-col items-center">
+              <div className="flex h-9 w-9 items-center justify-center rounded-full bg-ink font-sans text-xs font-black text-white">1</div>
+              <div className="mt-1 w-px flex-1 bg-line" />
+            </div>
+            <div className="flex-1 pt-1">
+              <p className="font-sans text-sm font-bold text-ink">Make the Payment</p>
+              <p className="mt-1 text-xs text-muted">Visit our Accra office to complete your payment and confirm your order.</p>
+            </div>
+          </div>
+
+          {/* Step 2 */}
+          <div className="relative flex gap-4 pb-6">
+            <div className="flex flex-col items-center">
+              <div className="flex h-9 w-9 items-center justify-center rounded-full bg-ink font-sans text-xs font-black text-white">2</div>
+              <div className="mt-1 w-px flex-1 bg-line" />
+            </div>
+            <div className="flex-1 pt-1">
+              <p className="font-sans text-sm font-bold text-ink">Paperwork & Documents</p>
+              <p className="mt-1 text-xs text-muted">We prepare all paperwork and export documents within 7–10 working days.</p>
+            </div>
+          </div>
+
+          {/* Step 3 */}
+          <div className="relative flex gap-4 pb-6">
+            <div className="flex flex-col items-center">
+              <div className="flex h-9 w-9 items-center justify-center rounded-full bg-ink font-sans text-xs font-black text-white">3</div>
+              <div className="mt-1 w-px flex-1 bg-line" />
+            </div>
+            <div className="flex-1 pt-1">
+              <p className="font-sans text-sm font-bold text-ink">Maintenance & Servicing</p>
+              <p className="mt-1 text-xs text-muted">We service the car so when you get it, you can just drive it.</p>
+            </div>
+          </div>
+
+          {/* Step 4 */}
+          <div className="relative flex gap-4">
+            <div className="flex flex-col items-center">
+              <div className="flex h-9 w-9 items-center justify-center rounded-full bg-accent font-sans text-xs font-black text-white">4</div>
+            </div>
+            <div className="flex-1 pt-1">
+              <p className="font-sans text-sm font-bold text-ink">Gift Package & Shipping</p>
+              <p className="mt-1 text-xs text-muted">We add a gift package in your car and ship it to Tema Port, Ghana.</p>
+            </div>
+          </div>
+
+          {/* What's Included */}
+          <div className="mt-6 border-t border-line pt-5">
+            <p className="font-sans text-[11px] font-bold uppercase tracking-[0.18em] text-muted mb-3">What's Included</p>
+            <div className="grid gap-2 sm:grid-cols-2">
+              {[
+                'Engine oil change & filter change',
+                'Proper cleaning of the car',
+                'All relevant car papers',
+                'Exporting documents',
+                'Auto gift package',
+                'Language changed to English',
+              ].map((item, i) => (
+                <div key={i} className="flex items-center gap-2">
+                  <Check className="h-4 w-4 text-accent flex-shrink-0" strokeWidth={2.5} />
+                  <span className="text-xs text-ink">{item}</span>
                 </div>
-                <div>
-                  <p className="font-sans text-sm font-bold text-ink">{point.title}</p>
-                  <p className="text-xs text-muted">{point.desc}</p>
-                </div>
-              </div>
-            );
-          })}
+              ))}
+            </div>
+          </div>
         </div>
 
         {/* Office Info with Map */}
