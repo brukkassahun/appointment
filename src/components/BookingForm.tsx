@@ -4,6 +4,7 @@ import { useState } from 'react';
 import { config } from '@/lib/config';
 import {
   CalendarDays, Clock, MapPin, Check, Car, ChevronRight,
+  ShieldCheck, Ship, FileCheck, Sparkles, Phone,
 } from 'lucide-react';
 
 interface Booking {
@@ -20,6 +21,12 @@ const TIME_SLOTS = [
   { val: '9:00 AM - 12:00 PM', label: 'Morning', sub: '9AM - 12PM' },
   { val: '12:00 PM - 3:00 PM', label: 'Midday', sub: '12PM - 3PM' },
   { val: '3:00 PM - 5:00 PM', label: 'Afternoon', sub: '3PM - 5PM' },
+];
+
+const HOOK_POINTS = [
+  { icon: ShieldCheck, title: 'Pre-Export Inspected', desc: 'Vehicle passed full quality check before shipping from China' },
+  { icon: FileCheck, title: 'Documents Ready', desc: 'Title, bill of lading, and export docs prepared for your collection' },
+  { icon: Ship, title: 'Arrived in Ghana', desc: 'Your vehicle has cleared Tema port and is at our Accra office' },
 ];
 
 export default function BookingForm({ booking }: { booking: Booking }) {
@@ -97,7 +104,7 @@ export default function BookingForm({ booking }: { booking: Booking }) {
               <Check className="h-8 w-8 text-accent" strokeWidth={2} />
             </div>
             <h1 className="font-display text-2xl font-black uppercase tracking-[-0.01em] text-ink">
-              Appointment Sent
+              Your Car Awaits
             </h1>
             <p className="mt-3 text-sm leading-relaxed text-muted">
               Your appointment has been recorded. We are opening WhatsApp so you can send the details to our Accra office.
@@ -109,6 +116,7 @@ export default function BookingForm({ booking }: { booking: Booking }) {
                 <li>1. Send the WhatsApp message to our office</li>
                 <li>2. Our office confirms your appointment</li>
                 <li>3. Visit the office on your selected date</li>
+                <li>4. Complete payment and drive your car home</li>
               </ol>
             </div>
           </div>
@@ -131,20 +139,30 @@ export default function BookingForm({ booking }: { booking: Booking }) {
       </div>
 
       <div className="mx-auto max-w-2xl px-4 py-6 sm:px-6 sm:py-10">
-        {/* Hero / Car Info */}
-        <div className="mb-6">
-          <p className="eyebrow">Schedule Your Visit</p>
-          <h1 className="display-lg mt-4 text-ink">Office Appointment</h1>
-          <p className="mt-3 text-sm leading-relaxed text-muted">
-            Book your visit to our Accra office for vehicle payment and collection.
+        {/* Premium Welcome */}
+        <div className="mb-8 text-center">
+          <div className="mx-auto mb-4 flex h-12 w-12 items-center justify-center rounded-2xl bg-accent/10">
+            <Sparkles className="h-6 w-6 text-accent" strokeWidth={1.5} />
+          </div>
+          <p className="eyebrow">Your Car Awaits You</p>
+          <h1 className="display-lg mt-4 text-ink">
+            Welcome, Your<br /><span className="text-accent">Jetour</span> Is Ready
+          </h1>
+          <p className="mx-auto mt-4 max-w-md text-sm leading-relaxed text-muted">
+            Your vehicle has arrived from China, passed inspection, and is waiting at our Accra office.
+            Book your visit to complete payment and drive your car home.
           </p>
         </div>
 
         {/* Car Info Card (pre-filled by admin) */}
         <div className="card-coda mb-6 overflow-hidden">
           {booking.car_image_url && (
-            <div className="h-56 overflow-hidden sm:h-64">
+            <div className="relative h-56 overflow-hidden sm:h-72">
               <img src={booking.car_image_url} alt={`${booking.car_make} ${booking.car_model}`} className="h-full w-full object-cover" />
+              <div className="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent" />
+              <div className="absolute bottom-0 left-0 right-0 p-4">
+                <span className="badge bg-accent text-white">Ready for Collection</span>
+              </div>
             </div>
           )}
           <div className="p-5 sm:p-6">
@@ -158,6 +176,14 @@ export default function BookingForm({ booking }: { booking: Booking }) {
                 <span className="text-sm text-muted">Agreed Price</span>
                 <span className="font-sans text-lg font-black text-accent">{booking.car_price}</span>
               </div>
+              <div className="flex items-center justify-between border-t border-line pt-2">
+                <span className="text-sm text-muted">Import Duty (est.)</span>
+                <span className="font-sans text-sm font-bold text-ink">Payable at office</span>
+              </div>
+              <div className="flex items-center justify-between">
+                <span className="text-sm text-muted">Registration & Tags</span>
+                <span className="font-sans text-sm font-bold text-ink">Assisted on-site</span>
+              </div>
             </div>
             <p className="mt-3 text-xs text-faint">
               If any detail is incorrect, contact your sales agent on WhatsApp before booking.
@@ -165,15 +191,66 @@ export default function BookingForm({ booking }: { booking: Booking }) {
           </div>
         </div>
 
-        {/* Office Info */}
-        <div className="mb-6 flex items-center gap-4 rounded-2xl border border-line bg-paper p-4">
-          <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-card flex-shrink-0">
-            <MapPin className="h-5 w-5 text-ink" strokeWidth={1.5} />
+        {/* Hook Points — why book now */}
+        <div className="mb-6 space-y-3">
+          {HOOK_POINTS.map((point, i) => {
+            const Icon = point.icon;
+            return (
+              <div key={i} className="flex items-center gap-4 rounded-2xl border border-line bg-paper p-4">
+                <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-accent/10 flex-shrink-0">
+                  <Icon className="h-5 w-5 text-accent" strokeWidth={1.5} />
+                </div>
+                <div>
+                  <p className="font-sans text-sm font-bold text-ink">{point.title}</p>
+                  <p className="text-xs text-muted">{point.desc}</p>
+                </div>
+              </div>
+            );
+          })}
+        </div>
+
+        {/* Office Info with Image */}
+        <div className="card-coda mb-6 overflow-hidden">
+          <div className="relative h-40 overflow-hidden">
+            <img
+              src="https://images.unsplash.com/photo-1568605114967-8130f3a36894?w=800&h=400&fit=crop"
+              alt="Our Accra office"
+              className="h-full w-full object-cover"
+            />
+            <div className="absolute inset-0 bg-gradient-to-t from-black/70 to-transparent" />
+            <div className="absolute bottom-0 left-0 right-0 p-4">
+              <p className="font-display text-lg font-black uppercase tracking-[-0.01em] text-white">{config.officeName}</p>
+              <p className="text-xs text-white/80">{config.officeAddress}</p>
+            </div>
           </div>
-          <div>
-            <p className="font-sans text-sm font-bold text-ink">{config.officeName}</p>
-            <p className="text-xs text-muted">{config.officeAddress} · {config.officeHours}</p>
+          <div className="flex items-center gap-4 p-4">
+            <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-card flex-shrink-0">
+              <Clock className="h-5 w-5 text-ink" strokeWidth={1.5} />
+            </div>
+            <div>
+              <p className="font-sans text-sm font-bold text-ink">{config.officeHours}</p>
+              <p className="text-xs text-muted">Walk-ins welcome, but appointments get priority service</p>
+            </div>
           </div>
+        </div>
+
+        {/* Quick Contact */}
+        <div className="mb-6 flex items-center gap-3 rounded-2xl border border-accent/20 bg-accent/5 p-4">
+          <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-accent flex-shrink-0">
+            <Phone className="h-5 w-5 text-white" strokeWidth={1.5} />
+          </div>
+          <div className="flex-1">
+            <p className="font-sans text-sm font-bold text-ink">Have questions before booking?</p>
+            <p className="text-xs text-muted">Chat with us on WhatsApp for instant answers</p>
+          </div>
+          <a
+            href={`https://wa.me/${config.officeWhatsApp}?text=${encodeURIComponent('Hi, I have a question about my vehicle appointment.')}`}
+            target="_blank"
+            rel="noopener noreferrer"
+            className="btn-accent px-4 py-2.5 text-[11px]"
+          >
+            WhatsApp
+          </a>
         </div>
 
         {/* Form */}
